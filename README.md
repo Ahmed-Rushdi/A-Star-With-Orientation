@@ -1,5 +1,5 @@
 # A-Star-With-Orientation
-some values are hardcoded because i was too lazy to fix themk
+Some values are hardcoded because i was too lazy to fix them
 ## Credit
 https://github.com/AtsushiSakai/PythonRobotics
 thier code helped alot.
