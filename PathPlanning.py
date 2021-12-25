@@ -1,3 +1,6 @@
+# Ahmed Rushdi Mohammed 20180008
+# Mahmoud Atia          20180256
+
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -45,7 +48,11 @@ class AStarAlgorithm:
 
             plt.scatter(current.x, current.y, color='r',
                         alpha=0.1, marker='s')  # , s=100)
-            # plt.pause(0.00001)
+            
+            # Comment the line below to disable animations and make the code much faster
+            plt.pause(0.00001)
+            
+            
             if current.x == goal.x and current.y == goal.y and current.o == goal.o:
                 print("Find goal")
                 goal.parent = current.parent
@@ -96,26 +103,16 @@ class AStarAlgorithm:
         # 3: 270 degree y_axis -ve
         #                   o   do      dx      dy      cost
         motion = np.array([[0,   0,      10,     0,     10],    # 10 steps along the +ve x_axis
-                           # 10 steps along the +ve x_axis then a left turn and another 10 steps along +ve y_axis
-                           [0,   -1,     10,     10,    20],
-                           # 10 steps along the +ve x_axis then a right turn and another 10 steps along -ve y_axis
-                           [0,   1,      10,     -10,   20],
-                           # 10 steps along the +ve y_axis
-                           [1,   0,      0,      10,    10],
-                           # 10 steps along the +ve y_axis then a left turn and another 10 steps along -ve x_axis
-                           [1,   -1,     -10,    10,    20],
-                           # 10 steps along the +ve y_axis then a right turn and another 10 steps along +ve x_axis
-                           [1,   1,      10,     10,    20],
-                           # 10 steps along the -ve x_axis
-                           [2,   0,      -10,    0,     10],
-                           # 10 steps along the +ve x_axis then a left turn and another 10 steps along -ve y_axis
-                           [2,   -1,     -10,    -10,   20],
-                           # 10 steps along the +ve x_axis then a right turn and another 10 steps along +ve y_axis
-                           [2,   1,      -10,    10,    20],
-                           # 10 steps along the -ve y_axis
-                           [3,   0,      0,      -10,   10],
-                           # 10 steps along the -ve y_axis then a left turn and another 10 steps along +ve x_axis
-                           [3,   -1,     10,     -10,   20],
+                           [0,   -1,     10,     10,    20],# 10 steps along the +ve x_axis then a left turn and another 10 steps along +ve y_axis
+                           [0,   1,      10,     -10,   20],# 10 steps along the +ve x_axis then a right turn and another 10 steps along -ve y_axis
+                           [1,   0,      0,      10,    10],# 10 steps along the +ve y_axis
+                           [1,   -1,     -10,    10,    20],# 10 steps along the +ve y_axis then a left turn and another 10 steps along -ve x_axis
+                           [1,   1,      10,     10,    20],# 10 steps along the +ve y_axis then a right turn and another 10 steps along +ve x_axis
+                           [2,   0,      -10,    0,     10],# 10 steps along the -ve x_axis
+                           [2,   -1,     -10,    -10,   20],# 10 steps along the +ve x_axis then a left turn and another 10 steps along -ve y_axis
+                           [2,   1,      -10,    10,    20],# 10 steps along the +ve x_axis then a right turn and another 10 steps along +ve y_axis
+                           [3,   0,      0,      -10,   10],# 10 steps along the -ve y_axis
+                           [3,   -1,     10,     -10,   20],# 10 steps along the -ve y_axis then a left turn and another 10 steps along +ve x_axis
                            [3,   1,      -10,    -10,   20]])   # 10 steps along the -ve y_axis then a right turn and another 10 steps along -ve x_axis
 
         return motion
@@ -138,5 +135,3 @@ if __name__ == '__main__':
     x, y = A_Star.search(50, 50, 0, 950, 950, 1)
     plt.plot(x, y, c='g')
     plt.show()
-    print(x)
-    print(y)
