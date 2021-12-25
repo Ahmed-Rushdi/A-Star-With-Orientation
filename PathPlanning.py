@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 class AStarAlgorithm:
     def __init__(self, obstacle_map, origin=(0, 0)):
-        self.min_x = origin[0]
-        self.min_x = origin[1]
-        self.max_x = origin[0] + obstacle_map.shape[1]
-        self.max_y = origin[1] + obstacle_map.shape[0]
+        self.min_x = 10
+        self.min_y = 10
+        self.max_x = 999
+        self.max_y = 999
         self.obstacle_map = obstacle_map
-        self.motion = self.get_motion_model()
+        self.motion = self.motion_model()
 
     class Node:
         def __init__(self, o, x, y, parent, cost):
@@ -29,20 +29,22 @@ class AStarAlgorithm:
         plt.figure(figsize=(10, 10))
         plt.imshow(self.obstacle_map, origin='lower', cmap='gray')
         plt.scatter(x=[start.x, goal.x], y=[start.y, goal.y], c='b')
-        plt.show()
-        open_nodes, closed_nodes = dict(),dict()
-        open_nodes[(start.o,start.x,start.y)] = start
-        
+
+        open_nodes, closed_nodes = dict(), dict()
+        open_nodes[(start.o, start.x, start.y)] = start
+        j = 0
         while True:
             if len(open_nodes) == 0:
                 print("No solution..")
                 break
 
-            current_i = min(open_nodes, key=lambda o: open_nodes[o].cost + self.heuristic(open_nodes[o],goal))
+            current_i = min(
+                open_nodes, key=lambda o: open_nodes[o].cost + self.heuristic(start=open_nodes[o], finish=goal))
             current = open_nodes[current_i]
-            
-            plt.scatter(current.x, current.y, color='r', alpha=0.3, marker='s')#, s=100)
-            
+
+            plt.scatter(current.x, current.y, color='r',
+                        alpha=0.1, marker='s')  # , s=100)
+            plt.pause(0.00001)
             if current.x == goal.x and current.y == goal.y and current.o == goal.o:
                 print("Find goal")
                 goal.parent = current.parent
@@ -54,17 +56,22 @@ class AStarAlgorithm:
             # Add it to the closed set
             closed_nodes[current_i] = current
 
-            for i in np.where(self.motion[:,0] == current.o)[0]:
-                new_o = current.o + self.motion[i,1]
-                new_x = current.x + self.motion[i,2]
-                new_y = current.y + self.motion[i,3]
-                new_cost = current.cost + self.motion[i,4]
-                if new_x > self.max_x or new_x < self.min_x or new_y > self.max_y or new_y < self.min_y or obstacle_map[new_y, new_x] == -1:
+            for i in np.where(self.motion[:, 0] == current.o)[0]:
+                new_o = (current.o + self.motion[i, 1]) % 4
+                new_x = current.x + self.motion[i, 2]
+                new_y = current.y + self.motion[i, 3]
+                new_cost = current.cost + self.motion[i, 4]
+                if new_x > self.max_x or new_x < self.min_x or new_y > self.max_y or new_y < self.min_y or obstacle_map[new_y, new_x] == -1 or (new_o, new_x, new_y) in closed_nodes or (new_o, new_x, new_y) in open_nodes:
                     continue
-                open_nodes[(new_o,new_x,new_y)] = self.Node(new_o,new_x,new_y,current,new_cost)
-        return self.final_path(start,goal,closed_nodes)
+                else:
+                    open_nodes[(new_o, new_x, new_y)] = self.Node(
+                        new_o, new_x, new_y, current, new_cost)
+            j += 1
+            print("iteration "+str(j)+' cost '+str(new_cost) +
+                  ' (x,y,o) ' + str((new_x, new_y, new_o)))
+        return self.final_path(start, goal, closed_nodes)
 
-    def final_path(self,start,goal,closed_nodes):
+    def final_path(self, start, goal, closed_nodes):
         y_list = []
         x_list = []
         current = goal
@@ -72,9 +79,10 @@ class AStarAlgorithm:
             y_list.append(current.y)
             x_list.append(current.x)
             current = current.parent
-        return x_list,y_list;
+        return x_list, y_list
+
     @staticmethod
-    def heuristic(self,start, finish):
+    def heuristic(start, finish):
         return np.linalg.norm([start.get_coords(), finish.get_coords()])
 
     @staticmethod
@@ -99,6 +107,7 @@ class AStarAlgorithm:
                            [3,   -1,     10,     -10,   20],    # 10 steps along the -ve y_axis then a left turn and another 10 steps along +ve x_axis
                            [3,   1,      -10,    -10,   20]])   # 10 steps along the -ve y_axis then a right turn and another 10 steps along -ve x_axis
 
+
         return motion
 
 
@@ -115,8 +124,9 @@ if __name__ == '__main__':
     obstacle_map[:800, 400:600] = -1
     obstacle_map[600:, 700:800] = -1
 
-    
     A_Star = AStarAlgorithm(obstacle_map=obstacle_map)
-    x, y = A_Star.search(50,50,0,950,950,1)
-
-
+    x, y = A_Star.search(50, 50, 0, 950, 950, 1)
+    plt.plot(x, y, c='g')
+    plt.show()
+    print(x)
+    print(y)
