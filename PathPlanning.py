@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -44,7 +45,7 @@ class AStarAlgorithm:
 
             plt.scatter(current.x, current.y, color='r',
                         alpha=0.1, marker='s')  # , s=100)
-            plt.pause(0.00001)
+            # plt.pause(0.00001)
             if current.x == goal.x and current.y == goal.y and current.o == goal.o:
                 print("Find goal")
                 goal.parent = current.parent
@@ -67,8 +68,8 @@ class AStarAlgorithm:
                     open_nodes[(new_o, new_x, new_y)] = self.Node(
                         new_o, new_x, new_y, current, new_cost)
             j += 1
-            print("iteration "+str(j)+' cost '+str(new_cost) +
-                  ' (x,y,o) ' + str((new_x, new_y, new_o)))
+            print("iteration "+str(j)+' cost '+str(current.cost) + ' hueristic ' + str(self.heuristic(current, goal)) +
+                  ' (x,y,o) ' + str((current.x, current.y, current.o)))
         return self.final_path(start, goal, closed_nodes)
 
     def final_path(self, start, goal, closed_nodes):
@@ -83,7 +84,7 @@ class AStarAlgorithm:
 
     @staticmethod
     def heuristic(start, finish):
-        return np.linalg.norm([start.get_coords(), finish.get_coords()])
+        return math.hypot(finish.x-start.x, finish.y-start.y)
 
     @staticmethod
     def motion_model():
@@ -95,18 +96,27 @@ class AStarAlgorithm:
         # 3: 270 degree y_axis -ve
         #                   o   do      dx      dy      cost
         motion = np.array([[0,   0,      10,     0,     10],    # 10 steps along the +ve x_axis
-                           [0,   -1,     10,     10,    20],    # 10 steps along the +ve x_axis then a left turn and another 10 steps along +ve y_axis
-                           [0,   1,      10,     -10,   20],    # 10 steps along the +ve x_axis then a right turn and another 10 steps along -ve y_axis
-                           [1,   0,      0,      10,    10],    # 10 steps along the +ve y_axis
-                           [1,   -1,     -10,    10,    20],    # 10 steps along the +ve y_axis then a left turn and another 10 steps along -ve x_axis
-                           [1,   1,      10,     10,    20],    # 10 steps along the +ve y_axis then a right turn and another 10 steps along +ve x_axis
-                           [2,   0,      -10,    0,     10],    # 10 steps along the -ve x_axis
-                           [2,   -1,     -10,    -10,   20],    # 10 steps along the +ve x_axis then a left turn and another 10 steps along -ve y_axis
-                           [2,   1,      -10,    10,    20],    # 10 steps along the +ve x_axis then a right turn and another 10 steps along +ve y_axis
-                           [3,   0,      0,      -10,   10],    # 10 steps along the -ve y_axis
-                           [3,   -1,     10,     -10,   20],    # 10 steps along the -ve y_axis then a left turn and another 10 steps along +ve x_axis
+                           # 10 steps along the +ve x_axis then a left turn and another 10 steps along +ve y_axis
+                           [0,   -1,     10,     10,    20],
+                           # 10 steps along the +ve x_axis then a right turn and another 10 steps along -ve y_axis
+                           [0,   1,      10,     -10,   20],
+                           # 10 steps along the +ve y_axis
+                           [1,   0,      0,      10,    10],
+                           # 10 steps along the +ve y_axis then a left turn and another 10 steps along -ve x_axis
+                           [1,   -1,     -10,    10,    20],
+                           # 10 steps along the +ve y_axis then a right turn and another 10 steps along +ve x_axis
+                           [1,   1,      10,     10,    20],
+                           # 10 steps along the -ve x_axis
+                           [2,   0,      -10,    0,     10],
+                           # 10 steps along the +ve x_axis then a left turn and another 10 steps along -ve y_axis
+                           [2,   -1,     -10,    -10,   20],
+                           # 10 steps along the +ve x_axis then a right turn and another 10 steps along +ve y_axis
+                           [2,   1,      -10,    10,    20],
+                           # 10 steps along the -ve y_axis
+                           [3,   0,      0,      -10,   10],
+                           # 10 steps along the -ve y_axis then a left turn and another 10 steps along +ve x_axis
+                           [3,   -1,     10,     -10,   20],
                            [3,   1,      -10,    -10,   20]])   # 10 steps along the -ve y_axis then a right turn and another 10 steps along -ve x_axis
-
 
         return motion
 
