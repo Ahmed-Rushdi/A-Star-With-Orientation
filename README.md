@@ -18,7 +18,7 @@ The robot is unable to move except in steps of 10.
 ### Assuming there are obstacles as below
 ![obstacles](Capture2.PNG) 
 
-### I used A* to solve the plan the path
+### The result of the A* is:
 ![path](Figure_1.png)
 
 
