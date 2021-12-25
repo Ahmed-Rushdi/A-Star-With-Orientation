@@ -1,5 +1,4 @@
 # Ahmed Rushdi Mohammed 20180008
-# Mahmoud Atia          20180256
 
 import math
 import numpy as np
